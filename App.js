@@ -1,10 +1,14 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { createAppContainer, createStackNavigator } from 'react-navigation';
 import ProductScreen from './components/ProductScreen';
 import ProductDetailsScreen from './components/ProductDetailsScreen';
 import ProductAddScreen from './components/ProductAddScreen';
 import ProductEditScreen from './components/ProductEditScreen';
+import RNAccountKit from 'react-native-facebook-account-kit';
+import CacheStore from 'react-native-cache-store';
+import Database from './Database';
+const db = new Database();
 
 const RootStack = createStackNavigator(
   {
@@ -27,19 +31,95 @@ const RootStack = createStackNavigator(
   },
 );
 
-const RootContainer = createAppContainer(RootStack);
-
 export default class App extends React.Component {
-  render() {
+
+  constructor(){
+    super();
+    this.state = {
+      userId: '',
+      phoneNumber: '',
+      isLoading: true,
+    }
+  }
+
+  componentWillMount(){
+    CacheStore.get('userState').then((userState) => {
+      if(userState) {
+        console.log('userState is found', userState)
+        this.setState({ 'userId': userState.userId, 'phoneNumber': userState.phoneNumber, 'isLoading': false });
+      }else {
+        console.log('user state did not found');
+        this.setState({'isLoading' : false})
+      }
+    });
+  }
+
+  onLogoutPressed() {
+    console.log('logout pressed');
+    CacheStore.remove('userState');
+    this.setState({
+      userId: '',
+      phoneNumber: ''
+    })
+  }
+
+  renderUserLogged() {
     return <RootContainer />;
+    // return (
+    //   <View>
+    //     <TouchableOpacity style={styles.button} onPress={() => this.onLogoutPressed()}>
+    //       <Text style={styles.buttonText}>Logout</Text>
+    //     </TouchableOpacity>
+
+    //     <Text style={styles.label}>Phone Number</Text>
+    //     <Text style={styles.text}>{this.state.phoneNumber}</Text>
+    //   </View>
+    // )
+  }
+
+  renderLogin() {
+    db.userLoggedIn().then((data) =>{
+      console.log('data', data)
+      this.setState({
+        phoneNumber: data.phoneNumber,
+        userId: data.userId
+      })
+    });
+    
+    return (
+      <View>
+        <Text>Hell dfsg sdmflgkj sdflgj sdflgjs; dfklgj;sdfklgj; sdfkg o</Text>
+      </View>
+    )
+  }
+  
+
+  render() {
+    console.log('statate', this.state);
+    if(this.state.isLoading){
+      return(
+        <View style={styles.activity}>
+          <ActivityIndicator size="large" color="#0000ff"/>
+        </View>
+      )
+    }else if(this.state.phoneNumber){
+      const RootContainer = createAppContainer(RootStack);
+      return <RootContainer />;
+    } else {
+      return (
+        <View style={styles.container}>
+          { this.renderLogin() }
+        </View>
+      )
+    }
   }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
     justifyContent: 'center',
-  },
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  }
 });

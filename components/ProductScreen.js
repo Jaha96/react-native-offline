@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { StyleSheet, FlatList, ActivityIndicator, View, Text } from 'react-native';
 import { ListItem, Button } from 'react-native-elements';
 import Database from '../Database';
+import RNRestart from 'react-native-restart';
+import CacheStore from 'react-native-cache-store';
 
 
 const db = new Database();
@@ -36,7 +38,6 @@ export default class ProductScreen extends Component {
         })
     }
 
-
   static navigationOptions = ({ navigation }) => {
     return {
       title: 'Жагсаалт',
@@ -45,9 +46,13 @@ export default class ProductScreen extends Component {
           buttonStyle={{ padding: 0, backgroundColor: 'transparent' }}
           icon={{ name: 'add-circle', style: { marginRight: 0, fontSize: 28 } }}
           onPress={() => { 
-            navigation.navigate('AddProduct', {
-              onNavigateBack: this.handleOnNavigateBack
-            }); 
+            CacheStore.flush().then((x) => {
+              RNRestart.Restart();
+            })
+            
+            // navigation.navigate('AddProduct', {
+            //   onNavigateBack: this.handleOnNavigateBack
+            // }); 
           }}
         />
       ),
@@ -61,7 +66,7 @@ export default class ProductScreen extends Component {
     <ListItem
       title={item.prodName}
       leftAvatar={{
-        source: item.prodImage && { uri: item.prodImage },
+        source: '',//item.prodImage && { uri: item.prodImage },
         title: item.prodName[0]
       }}
       onPress={() => {

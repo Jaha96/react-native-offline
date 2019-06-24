@@ -59,6 +59,8 @@
 		2D47B19F833943F586204263 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 713766D0C60F4652ABC7A5A0 /* Zocial.ttf */; };
 		59CAFC7414F648F4B5E536C7 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BB00B3023ADF4CF0A97488CD /* libRNVectorIcons.a */; };
 		4CF42A1B4E274FE9B96F4F68 /* libRNVectorIcons-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EABF3DF6C3494CBA940CFE35 /* libRNVectorIcons-tvOS.a */; };
+		EE9CBB75205C414481EB2609 /* libRNAccountKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A06B88C8C9E245F999978DDD /* libRNAccountKit.a */; };
+		9627F24277DB4EC59746B30E /* libRCTRestart.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F77B805958DB4812948FA1D9 /* libRCTRestart.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -389,6 +391,10 @@
 		1BDF1AEB91A1432B9C47930C /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; name = "RNVectorIcons.xcodeproj"; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		BB00B3023ADF4CF0A97488CD /* libRNVectorIcons.a */ = {isa = PBXFileReference; name = "libRNVectorIcons.a"; path = "libRNVectorIcons.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		EABF3DF6C3494CBA940CFE35 /* libRNVectorIcons-tvOS.a */ = {isa = PBXFileReference; name = "libRNVectorIcons-tvOS.a"; path = "libRNVectorIcons-tvOS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		B58315B0AF0A46B693F631C1 /* RNAccountKit.xcodeproj */ = {isa = PBXFileReference; name = "RNAccountKit.xcodeproj"; path = "../node_modules/react-native-facebook-account-kit/ios/RNAccountKit.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		A06B88C8C9E245F999978DDD /* libRNAccountKit.a */ = {isa = PBXFileReference; name = "libRNAccountKit.a"; path = "libRNAccountKit.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		99410B35F7604DFC9200AB56 /* RCTRestart.xcodeproj */ = {isa = PBXFileReference; name = "RCTRestart.xcodeproj"; path = "../node_modules/react-native-restart/ios/RCTRestart.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		F77B805958DB4812948FA1D9 /* libRCTRestart.a */ = {isa = PBXFileReference; name = "libRCTRestart.a"; path = "libRCTRestart.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -420,6 +426,8 @@
 				57062B1C21FF43E4AF4CB794 /* libRNGestureHandler.a in Frameworks */,
 				25ECAD2B5193432FB321A5C2 /* libSQLite.a in Frameworks */,
 				59CAFC7414F648F4B5E536C7 /* libRNVectorIcons.a in Frameworks */,
+				EE9CBB75205C414481EB2609 /* libRNAccountKit.a in Frameworks */,
+				9627F24277DB4EC59746B30E /* libRCTRestart.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -614,6 +622,8 @@
 				1DD13A23DAF2421D9C2CC088 /* RNGestureHandler.xcodeproj */,
 				4A70F5277208456EB50A8E79 /* SQLite.xcodeproj */,
 				1BDF1AEB91A1432B9C47930C /* RNVectorIcons.xcodeproj */,
+				B58315B0AF0A46B693F631C1 /* RNAccountKit.xcodeproj */,
+				99410B35F7604DFC9200AB56 /* RCTRestart.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1285,12 +1295,16 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-sqlite-storage\src\ios",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
+					"$(SRCROOT)\..\node_modules\react-native-facebook-account-kit\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-restart\ios\RCTRestart",
 				);
 			};
 			name = Debug;
@@ -1317,12 +1331,16 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-sqlite-storage\src\ios",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
+					"$(SRCROOT)\..\node_modules\react-native-facebook-account-kit\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-restart\ios\RCTRestart",
 				);
 			};
 			name = Release;
@@ -1348,6 +1366,8 @@
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-sqlite-storage\src\ios",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
+					"$(SRCROOT)\..\node_modules\react-native-facebook-account-kit\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-restart\ios\RCTRestart",
 				);
 			};
 			name = Debug;
@@ -1372,6 +1392,8 @@
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-sqlite-storage\src\ios",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
+					"$(SRCROOT)\..\node_modules\react-native-facebook-account-kit\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-restart\ios\RCTRestart",
 				);
 			};
 			name = Release;
@@ -1406,12 +1428,16 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-sqlite-storage\src\ios",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
+					"$(SRCROOT)\..\node_modules\react-native-facebook-account-kit\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-restart\ios\RCTRestart",
 				);
 			};
 			name = Debug;
@@ -1446,12 +1472,16 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-sqlite-storage\src\ios",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
+					"$(SRCROOT)\..\node_modules\react-native-facebook-account-kit\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-restart\ios\RCTRestart",
 				);
 			};
 			name = Release;
@@ -1485,12 +1515,16 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-sqlite-storage\src\ios",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
+					"$(SRCROOT)\..\node_modules\react-native-facebook-account-kit\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-restart\ios\RCTRestart",
 				);
 			};
 			name = Debug;
@@ -1524,12 +1558,16 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-sqlite-storage\src\ios",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
+					"$(SRCROOT)\..\node_modules\react-native-facebook-account-kit\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-restart\ios\RCTRestart",
 				);
 			};
 			name = Release;

@@ -1,8 +1,11 @@
 import SQLite from "react-native-sqlite-storage";
+import RNAccountKit from 'react-native-facebook-account-kit';
+import CacheStore from 'react-native-cache-store';
+
 SQLite.DEBUG(true);
 SQLite.enablePromise(true);
 
-const database_name = "Reactoffline.db";
+const database_name = "Reactoffline1.db";
 const database_version = "1.0";
 const database_displayname = "SQLite React Offline Database";
 const database_size = 200000;
@@ -26,13 +29,14 @@ export default class Database {
                 .then(DB => {
                   db = DB;
                   console.log("Database OPEN");
-                  db.executeSql('SELECT 1 FROM Product LIMIT 1').then(() => {
+                  db.executeSql('SELECT 1 FROM Products LIMIT 1').then(() => {
                       console.log("Database is ready ... executing query ...");
                   }).catch((error) =>{
                       console.log("Received error: ", error);
                       console.log("Database not yet ready ... populating data");
                       db.transaction((tx) => {
-                          tx.executeSql('CREATE TABLE IF NOT EXISTS Product (prodId, prodName, prodDesc, prodImage, prodPrice)');
+                          tx.executeSql('CREATE TABLE IF NOT EXISTS users ( user_id integer PRIMARY KEY, phone_number text NOT NULL, created_date text, login_date text )');
+                          tx.executeSql('CREATE TABLE IF NOT EXISTS products ( product_id integer PRIMARY KEY, user_id integer NOT NULL, name text NOT NULL, price real NOT null, img_local_url, quantity integer, register_date, description, FOREIGN KEY (user_id) REFERENCES users(user_id) )');
                       }).then(() => {
                           console.log("Table created successfully");
                       }).catch(error => {
@@ -187,5 +191,112 @@ export default class Database {
             console.log(err);
           });
         });  
+      }
+
+      onLoginError(e) {
+        console.log('Failed to login', e)
+      }
+
+      FindUser(phoneNumber){
+        return new Promise((resolve) =>{
+          this.initDB().then((db) => {
+            db.transaction((tx) => {
+              tx.executeSql('SELECT * FROM users WHERE phone_number = ?', [phoneNumber]).then(([tx,results]) => {
+                console.log(results);
+                if(results.rows.length > 0) {
+                  let row = results.rows.item(0);
+                  console.log('User found. Result is: ', row)
+                  resolve(row);
+                } else {
+                  resolve(null);
+                }
+              });
+              
+            }).then((result) => {
+              this.closeDatabase(db);
+            }).catch((err) => {
+              console.log(err);
+              reject(err)
+            });
+          }).catch((err) => {
+            console.log(err);
+            reject(err);
+          });
+        })
+      }
+
+      CreateUser(phoneNumber){
+        return new Promise((resolve) =>{
+          this.initDB().then((db) => {
+            db.transaction((tx) => {
+              tx.executeSql("insert into users(phone_number, created_date, login_date) VALUES (?, DATETIME('now'), DATETIME('now'))", [phoneNumber]).then(([tx, results]) => {
+                console.log('New user created. Result is: ', results)
+                resolve(results);
+              });
+            }).then((result) => {
+              this.closeDatabase(db);
+            }).catch((err) => {
+              console.log(err);
+              reject(err)
+            });
+          }).catch((err) => {
+            console.log(err);
+            reject(err);
+          });
+        })
+      }
+
+      userLoggedIn() {
+        return new Promise((resolve) => {
+          //AccountKit config
+          RNAccountKit.configure({ initialPhoneCountryPrefix: '+976', defaultCountry: 'MN'});
+
+          RNAccountKit.loginWithPhone().then(async (token) => {
+            if (!token) {
+              console.log('Login cancelled')
+              resolve('login cancelled');
+            } else {
+              RNAccountKit.getCurrentAccount().then((account) => {
+                if(account) {
+                  const phoneNumber = account.phoneNumber.number;
+                  let userState = {}
+                  this.FindUser(phoneNumber).then((data) => {
+                    console.log('FindUser data is ', data);
+                    if(data) {
+                      userState = {
+                        userId: data.user_id,
+                        phoneNumber: phoneNumber
+                      }
+                      console.log('CacheStore set', userState);
+                      CacheStore.set('userState', userState, 525600); // Expires in 1 year
+                      console.log('account', account);
+                      resolve(userState);
+                    } else {
+                      this.CreateUser(phoneNumber).then((data) => {
+                        console.log('CreateUser data is ', data);
+                        console.log('Insert id is :', data.insertId)
+                        userState = {
+                          userId: data.insertId,
+                          phoneNumber: phoneNumber
+                        }
+                        console.log('CacheStore set', userState);
+                        CacheStore.set('userState', userState, 525600); // Expires in 1 year
+                        console.log('account', account);
+                        resolve(userState);
+                      })
+                    }
+                  })
+                } else {
+                  resolve('failed login')
+                }
+                }).catch((e) => {this.onLoginError(e);
+                  resolve('failed login')
+                })
+            }
+          }).catch((e) => {
+            this.onLoginError(e)
+            resolve('failed login')
+          })
+        })
       }
 }
