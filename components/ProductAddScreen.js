@@ -17,6 +17,7 @@ import RNFS from 'react-native-fs';
 import ImagePicker from 'react-native-image-picker';
 import fetch_blob from 'rn-fetch-blob';
 import Moment from 'moment';
+import CacheStore from 'react-native-cache-store';
 
 
 const db = new Database();
@@ -28,6 +29,7 @@ export default class ProductAddScreen extends Component {
     constructor() {
         super();
         this.state = {
+            userId: null,
             prodName: '',
             prodPrice: '',
             prodImage: {},
@@ -37,26 +39,31 @@ export default class ProductAddScreen extends Component {
             isLoading: false,
             searchedAdresses: [],
             isListViewHidden: true,
-            films: [{title: 'jaha', date: '2019'},{title: 'erka', date: '2020'}, {title: 'japar', date: '2034'},
-            {title: 'jaha', date: '2019'},{title: 'erka', date: '2020'}, {title: 'japar', date: '2034'},
-            {title: 'jaha', date: '2019'},{title: 'erka', date: '2020'}, {title: 'japar', date: '2034'},
-            {title: 'jaha', date: '2019'},{title: 'erka', date: '2020'}, {title: 'japar', date: '2034'},
-            {title: 'jaha', date: '2019'},{title: 'erka', date: '2020'}, {title: 'japar', date: '2034'},
-            {title: 'jaha', date: '2019'},{title: 'erka', date: '2020'}, {title: 'japar', date: '2034'},
-            {title: 'jaha', date: '2019'},{title: 'erka', date: '2020'}, {title: 'japar', date: '2034'},
-            {title: 'jaha', date: '2019'},{title: 'erka', date: '2020'}, {title: 'japar', date: '2034'},
-            {title: 'jaha', date: '2019'},{title: 'erka', date: '2020'}, {title: 'japar', date: '2034'},
-            {title: 'jaha', date: '2019'},{title: 'erka', date: '2020'}, {title: 'japar', date: '2034'},
-            {title: 'jaha', date: '2019'},{title: 'erka', date: '2020'}, {title: 'japar', date: '2034'},
-            {title: 'jaha', date: '2019'},{title: 'erka', date: '2020'}, {title: 'japar', date: '2034'},
-            {title: 'jaha', date: '2019'},{title: 'erka', date: '2020'}, {title: 'japar', date: '2034'},
-            {title: 'jaha', date: '2019'},{title: 'erka', date: '2020'}, {title: 'japar', date: '2034'},
-            {title: 'jaha', date: '2019'},{title: 'erka', date: '2020'}, {title: 'japar', date: '2034'},
-            {title: 'jaha', date: '2019'},{title: 'erka', date: '2020'}, {title: 'japar', date: '2034'},
-            {title: 'jaha', date: '2019'},{title: 'erka', date: '2020'}, {title: 'japar', date: '2034'},
-            {title: 'jaha', date: '2019'},{title: 'erka', date: '2020'}, {title: 'japar', date: '2034'},
-            {title: 'jaha', date: '2019'},{title: 'erka', date: '2020'}, {title: 'japar', date: '2034'}] ,
+            categories: [] ,
         };
+    }
+
+    componentWillMount(){
+        CacheStore.get('userState').then((userState) => {
+            console.log('userState', userState);
+            userState?this.setState({ 'userId': userState.userId, 'isLoading': false }):this.setState({'isLoading' : false});
+        });
+    }
+
+    componentDidMount() {
+        this._subscribe = this.props.navigation.addListener('didFocus', () => {
+          this.getCategories();
+        });
+    }
+
+    getCategories() {
+        let categories = [];
+        db.listCategory().then((data) => {
+            categories = data;
+            this.setState({categories: categories});
+        }).catch((err) => {
+            console.log(err);
+        })
     }
 
     updateTextInput = (text, field) => {
@@ -69,40 +76,37 @@ export default class ProductAddScreen extends Component {
     };
 
     saveProduct() {
-        this.setState({
-            isLoading: true,
-        });
-        let data = {
-            prodId: this.state.prodId,
-            prodName: this.state.prodName,
-            prodDesc: this.state.prodDesc,
-            prodImage: this.state.prodImage,
-            prodPrice: this.state.prodPrice
+        let product = {
+            user_id: this.state.userId,
+            name: this.state.prodName,
+            price: this.state.prodPrice,
+            img_local_url: this.state.prodImage.source,
+            quantity: this.state.prodQuantity,
+            register_date: this.state.prodDate,
+            description: this.state.prodDesc
         }
-        db.addProduct(data).then((result) => {
-            console.log(result);
-            this.setState({
-                isLoading: false,
-            });
+        db.addProduct(product).then((result) => {
+            console.log('Finall addProduct result:', result);
             this.props.navigation.state.params.onNavigateBack;
             this.props.navigation.goBack();
         }).catch((err) => {
             console.log(err);
+        }).finally((f) => {
             this.setState({
                 isLoading: false,
             });
         })
     }
 
-    findFilm(query) {
+    findCategories(query) {
         console.log(query)
         if (query === '') {
           return [];
         }
     
-        const { films } = this.state;
+        const { categories } = this.state;
         const regex = new RegExp(`${query.trim()}`, 'i');
-        return films.filter(film => film.title.search(regex) >= 0);
+        return categories.filter(category => category.name.search(regex) >= 0);
       }
 
 
@@ -114,13 +118,23 @@ export default class ProductAddScreen extends Component {
         this.setState({searchedAdresses: searchedAdresses});
     };
 
-    renderAdress = (film) => {
+    renderCategories = (category) => {
         return (
                 <TouchableOpacity style={{flex: 1, margin: 5}} onPress={(e) => {
-                            this.setState({ prodName: film.title, isListViewHidden: true });
-                        }}>
-                            <Text>{film.title}, {film.date}</Text>
-                        </TouchableOpacity>
+                    console.log('selected category is:', category)
+                    this.setState({ prodName: category.name, prodPrice: category.price, isListViewHidden: true });
+                    if(category.img_local_url) {
+                        const file_path = category.img_local_url;
+                        //set image
+                        RNFS.readFile(file_path, 'utf8').then((r) => {
+                            console.log('readFile is ', r);
+                            this.setState({prodImage: {data: r, source: file_path}});
+                        })
+                    }
+                    
+                }}>
+                    <Text>{category.name}</Text>
+                </TouchableOpacity>
                 
         );
     };
@@ -142,19 +156,14 @@ export default class ProductAddScreen extends Component {
                 }).catch((err) =>{
                     console.log('error occured while creating directory', err);
                 }).finally((e) => {
-                    console.log('use image is : ', response);
-                
                     const file_path = imageDirectory + "/"+ moment.format('YYYYMMDDHHmmssSSS') + ".txt";
                     console.log('file_path', file_path)
                     const file_data = "data:" + response.type +";base64," + response.data;
 
                     RNFS.writeFile(file_path, file_data, 'utf8')
                         .then((success) => {
+                            this.setState({prodImage: {data: file_data, source: file_path}});
                             console.log('FILE WRITTEN!');
-                            RNFS.readFile(file_path, 'utf8').then((r) => {
-                                console.log('readFile is ', r);
-                                this.setState({prodImage: {data: r, source: file_path}});
-                            })
                         })
                         .catch((err) => {
                             console.log(err.message);
@@ -169,7 +178,7 @@ export default class ProductAddScreen extends Component {
         var imageSource = this.state.prodImage.data ? 
             { uri: this.state.prodImage.data } : require('../assets/images/image_upload.png');
         const { prodName } = this.state;
-        const films = this.findFilm(prodName);
+        const categories = this.findCategories(prodName);
         const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
         if (this.state.isLoading) {
             return (
@@ -190,8 +199,8 @@ export default class ProductAddScreen extends Component {
                     {
                         this.state.isListViewHidden ? null: 
                         <ListView style={{flex: 1}} enableEmptySections = {true}
-                                dataSource={films.length === 1 && comp(prodName, films[0].title) ? ds.cloneWithRows([]) : ds.cloneWithRows(films)}
-                            renderRow={this.renderAdress} />
+                                dataSource={categories.length === 1 && comp(prodName, categories[0].name) ? ds.cloneWithRows([]) : ds.cloneWithRows(categories)}
+                            renderRow={this.renderCategories} />
                     }
                 </View>
                 <View style={[styles.subContainer, styles.labelInputRow]}>

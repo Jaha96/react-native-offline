@@ -64,14 +64,14 @@ export default class ProductScreen extends Component {
 
   renderItem = ({ item }) => (
     <ListItem
-      title={item.prodName}
+      title={item.name}
       leftAvatar={{
-        source: item.prodImage && { uri: item.prodImage },
-        title: item.prodName[0]
+        source: item.sd && { uri: item.prodImage },
+        title: item.name[0]
       }}
       onPress={() => {
         this.props.navigation.navigate('ProductDetails', {
-          prodId: `${item.prodId}`,
+          prodId: `${item.product_id}`,
         });
       }}
       chevron
