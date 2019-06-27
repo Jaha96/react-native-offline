@@ -138,6 +138,9 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-fs')
+    implementation project(':rn-fetch-blob')
+    implementation project(':react-native-image-picker')
     implementation project(':react-native-restart')
     implementation project(':react-native-facebook-account-kit')
     implementation project(':react-native-vector-icons')

@@ -36,9 +36,10 @@ export default class Database {
                       console.log("Database not yet ready ... populating data");
                       db.transaction((tx) => {
                           tx.executeSql('CREATE TABLE IF NOT EXISTS users ( user_id integer PRIMARY KEY, phone_number text NOT NULL, created_date text, login_date text )');
-                          tx.executeSql('CREATE TABLE IF NOT EXISTS products ( product_id integer PRIMARY KEY, user_id integer NOT NULL, name text NOT NULL, price real NOT null, img_local_url, quantity integer, register_date, description, FOREIGN KEY (user_id) REFERENCES users(user_id) )');
+                          tx.executeSql('CREATE TABLE IF NOT EXISTS category ( category_id integer PRIMARY KEY, name text, price text, img_local_url text )');
+                          tx.executeSql('CREATE TABLE IF NOT EXISTS products ( product_id integer PRIMARY KEY, user_id integer NOT NULL, category_id integer, name text NOT NULL, price real NOT null, img_local_url, quantity integer, register_date, description, FOREIGN KEY (user_id) REFERENCES users(user_id) )');
                       }).then(() => {
-                          console.log("Table created successfully");
+                          console.log("Tables created successfully");
                       }).catch(error => {
                           console.log(error);
                           reject(error);
@@ -198,7 +199,7 @@ export default class Database {
       }
 
       FindUser(phoneNumber){
-        return new Promise((resolve) =>{
+        return new Promise((resolve, reject) =>{
           this.initDB().then((db) => {
             db.transaction((tx) => {
               tx.executeSql('SELECT * FROM users WHERE phone_number = ?', [phoneNumber]).then(([tx,results]) => {
@@ -226,7 +227,7 @@ export default class Database {
       }
 
       CreateUser(phoneNumber){
-        return new Promise((resolve) =>{
+        return new Promise((resolve, reject) =>{
           this.initDB().then((db) => {
             db.transaction((tx) => {
               tx.executeSql("insert into users(phone_number, created_date, login_date) VALUES (?, DATETIME('now'), DATETIME('now'))", [phoneNumber]).then(([tx, results]) => {

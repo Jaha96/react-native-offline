@@ -5,7 +5,6 @@ import ProductScreen from './components/ProductScreen';
 import ProductDetailsScreen from './components/ProductDetailsScreen';
 import ProductAddScreen from './components/ProductAddScreen';
 import ProductEditScreen from './components/ProductEditScreen';
-import RNAccountKit from 'react-native-facebook-account-kit';
 import CacheStore from 'react-native-cache-store';
 import Database from './Database';
 const db = new Database();
@@ -78,8 +77,8 @@ export default class App extends React.Component {
   }
 
   renderLogin() {
+    //Login with phone AccoutKit
     db.userLoggedIn().then((data) =>{
-      console.log('data', data)
       this.setState({
         phoneNumber: data.phoneNumber,
         userId: data.userId
@@ -88,7 +87,7 @@ export default class App extends React.Component {
     
     return (
       <View>
-        <Text>Hell dfsg sdmflgkj sdflgj sdflgjs; dfklgj;sdfklgj; sdfkg o</Text>
+        <Text>AccoutKit</Text>
       </View>
     )
   }

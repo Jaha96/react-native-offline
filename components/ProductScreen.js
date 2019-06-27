@@ -46,13 +46,13 @@ export default class ProductScreen extends Component {
           buttonStyle={{ padding: 0, backgroundColor: 'transparent' }}
           icon={{ name: 'add-circle', style: { marginRight: 0, fontSize: 28 } }}
           onPress={() => { 
-            CacheStore.flush().then((x) => {
-              RNRestart.Restart();
-            })
-            
-            // navigation.navigate('AddProduct', {
-            //   onNavigateBack: this.handleOnNavigateBack
-            // }); 
+            //logout code
+            // CacheStore.flush().then((x) => {
+            //   RNRestart.Restart();
+            // })
+            navigation.navigate('AddProduct', {
+              onNavigateBack: this.handleOnNavigateBack
+            }); 
           }}
         />
       ),
@@ -66,7 +66,7 @@ export default class ProductScreen extends Component {
     <ListItem
       title={item.prodName}
       leftAvatar={{
-        source: '',//item.prodImage && { uri: item.prodImage },
+        source: item.prodImage && { uri: item.prodImage },
         title: item.prodName[0]
       }}
       onPress={() => {
